@@ -75,17 +75,17 @@ Vagrant.configure("2") do |config|
       sudo yum install java-1.8.0-openjdk -y
       sudo yum install wget -y
       echo "Downloading InfluxDB, please wait..."
-      wget https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
+      wget --progress=bar:force https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
       echo "Download complete, finishing install"
       sudo yum localinstall influxdb-1.2.4.x86_64.rpm
       sudo systemctl restart influxdb      
       echo "Downloading Kapacitor, please wait..."
-      wget https://dl.influxdata.com/kapacitor/releases/kapacitor-1.3.1.x86_64.rpm
+      wget --progress=bar:force https://dl.influxdata.com/kapacitor/releases/kapacitor-1.3.1.x86_64.rpm
       echo "Download complete, finishing install"
       sudo yum localinstall kapacitor-1.3.1.x86_64.rpm
       sudo systemctl start kapacitor
       echo "Downloading Grafana, please wait..."
-      wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
+      wget --progress=bar:force https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
       echo "Download complete, finishing install"
       sudo yum localinstall grafana-4.3.1-1.x86_64.rpm 
       sudo systemctl start grafana-server
