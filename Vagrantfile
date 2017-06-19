@@ -73,6 +73,7 @@ Vagrant.configure("2") do |config|
    config.vm.provision "shell", inline: <<-SHELL
       sudo yum makecache
       sudo yum install java-1.8.0-openjdk -y
+      sudo yum install wget -y
       echo "Downloading InfluxDB, please wait..."
       wget https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
       echo "Download complete, finishing install"
