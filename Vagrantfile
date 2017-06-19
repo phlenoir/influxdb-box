@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "centos/7"
-  config.vm.hostname = "kafka-1"
+  config.vm.hostname = "tsdb"
   
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -71,18 +71,26 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   # config.vm.provision :shell, path: "install_kafka.sh"
    config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
       sudo yum makecache
       sudo yum install java-1.8.0-openjdk -y
-      echo "Downloading Kafka, please wait..."
-      wget -q http://mirror.catn.com/pub/apache/kafka/0.10.0.0/kafka_2.11-0.10.0.0.tgz
+      echo "Downloading InfluxDB, please wait..."
+      wget https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
       echo "Download complete, finishing install"
-      tar -zxvf kafka_2.11-0.10.0.0.tgz
-      cd kafka_2.11-0.10.0.0/
-      echo "host.name=192.168.33.10" >> config/server.properties
-      bin/zookeeper-server-start.sh config/zookeeper.properties &
-	  bin/kafka-server-start.sh config/server.properties &
+      sudo yum localinstall influxdb-1.2.4.x86_64.rpm
+      sudo systemctl restart influxdb      
+      echo "Downloading Kapacitor, please wait..."
+      wget https://dl.influxdata.com/kapacitor/releases/kapacitor-1.3.1.x86_64.rpm
+      echo "Download complete, finishing install"
+      sudo yum localinstall kapacitor-1.3.1.x86_64.rpm
+      sudo systemctl start kapacitor
+      echo "Downloading Grafana, please wait..."
+      wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
+      echo "Download complete, finishing install"
+      sudo yum localinstall grafana-4.3.1-1.x86_64.rpm 
+      sudo systemctl start grafana-server
+      echo "You may have to change Grafana http port to match virtualbox forwarded port (8080)"
+      echo "sudo vi /etc/grafana/grafana.ini"
+      echo "sudo systemctl restart grafana-server"
       echo "Installation complete!"
    SHELL
 end
