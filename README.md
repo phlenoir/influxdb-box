@@ -19,3 +19,13 @@ The box comes with influxdb, kapacitor and grafana installed plus a couple a uti
 
 ## Play
 See these [instructions] (https://github.com/phlenoir/influxdb-sampledata/blob/master/README.md) to start Kapacitor tasks that will consume data sent on UDP port 9100 and produce streams of data into an Influxdb database
+
+## About ##
+
+This box will install the following:
+
+* Vim
+* Git
+* python, including pip 
+* Java JRE
+* net tools
