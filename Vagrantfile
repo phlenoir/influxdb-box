@@ -73,25 +73,43 @@ Vagrant.configure("2") do |config|
    config.vm.provision "shell", inline: <<-SHELL
       sudo yum makecache
       sudo yum install java-1.8.0-openjdk -y
+	  sudo yum install epel-release -y
       sudo yum install wget -y
-      echo "Downloading InfluxDB, please wait..."
-      wget --progress=bar:force https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
-      echo "Download complete, finishing install"
-      sudo yum localinstall influxdb-1.2.4.x86_64.rpm
-      sudo systemctl restart influxdb      
-      echo "Downloading Kapacitor, please wait..."
-      wget --progress=bar:force https://dl.influxdata.com/kapacitor/releases/kapacitor-1.3.1.x86_64.rpm
-      echo "Download complete, finishing install"
-      sudo yum localinstall kapacitor-1.3.1.x86_64.rpm
+	  sudo yum install python -y
+	  sudo yum install git -y
+	  sudo yum install net-tools -y
+	  sudo yum install vim-enhanced -y
+
+	  echo "Installing pip"
+	  [[ ! -f get-pip.py ]] && sudo wget --progress=bar:force https://bootstrap.pypa.io/get-pip.py
+	  python get-pip.py
+	  echo "Installing monotonic for data generator"
+	  [[ ! -f monotonic-1.3-py2.py3-none-any.whl ]] && sudo wget --progress=bar:force https://pypi.python.org/packages/1e/4c/f58022573cd15125bc03114913906bcb6d9bc1a4b8a170a88e0525b6cd51/monotonic-1.3-py2.py3-none-any.whl#md5=cea658988c0560bf516bfc0a58e26b93
+	  sudo pip install monotonic-1.3-py2.py3-none-any.whl
+	  echo "Cloning data generator (contains conf snippets for kapacitor)"
+	  [[ ! -d influxdb-sampledata ]] && git clone "https://github.com/phlenoir/influxdb-sampledata.git"
+	  sudo chown -R vagrant:vagrant influxdb-sampledata
+	  
+	  echo "Installing influxdb"
+	  [[ ! -f influxdb-1.2.4.x86_64.rpm ]] && wget --progress=bar:force https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
+      sudo yum localinstall influxdb-1.2.4.x86_64.rpm -y
+      sudo systemctl restart influxdb
+	  
+	  echo "Installing kapacitor"
+      [[ ! -f kapacitor-1.3.1.x86_64.rpm ]] && wget --progress=bar:force https://dl.influxdata.com/kapacitor/releases/kapacitor-1.3.1.x86_64.rpm
+      sudo yum localinstall kapacitor-1.3.1.x86_64.rpm -y
+	  [[ -f influxdb-sampledata/kapacitor/conf/kapacitor_conf_snippet ]] && echo "Enabling udp listener in kapacitor.conf" && sudo cat "influxdb-sampledata/kapacitor/conf/kapacitor_conf_snippet" >> /etc/kapacitor/kapacitor.conf
       sudo systemctl start kapacitor
-      echo "Downloading Grafana, please wait..."
-      wget --progress=bar:force https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
-      echo "Download complete, finishing install"
-      sudo yum localinstall grafana-4.3.1-1.x86_64.rpm 
+	  
+	  echo "Installing grafana"
+	  [[ ! -f grafana-4.3.1-1.x86_64.rpm ]] &&  wget --progress=bar:force https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
+      sudo yum localinstall grafana-4.3.1-1.x86_64.rpm -y
       sudo systemctl start grafana-server
-      echo "You may have to change Grafana http port to match virtualbox forwarded port (8080)"
-      echo "sudo vi /etc/grafana/grafana.ini"
-      echo "sudo systemctl restart grafana-server"
+      echo "You may have to change Grafana http port to match virtualbox forwarded port (e.g. 8080)"
+      echo "Do --> sudo vi /etc/grafana/grafana.ini"
+      echo "Do --> sudo systemctl restart grafana-server"
+	  
+	  
       echo "Installation complete!"
    SHELL
 end
