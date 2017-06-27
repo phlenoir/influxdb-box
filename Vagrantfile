@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  # config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 	
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -83,9 +83,6 @@ Vagrant.configure("2") do |config|
 	  echo "Installing pip"
 	  [[ ! -f get-pip.py ]] && sudo wget --progress=bar:force https://bootstrap.pypa.io/get-pip.py
 	  python get-pip.py
-	  echo "Installing monotonic for data generator"
-	  [[ ! -f monotonic-1.3-py2.py3-none-any.whl ]] && sudo wget --progress=bar:force https://pypi.python.org/packages/1e/4c/f58022573cd15125bc03114913906bcb6d9bc1a4b8a170a88e0525b6cd51/monotonic-1.3-py2.py3-none-any.whl#md5=cea658988c0560bf516bfc0a58e26b93
-	  sudo pip install monotonic-1.3-py2.py3-none-any.whl
 	  echo "Cloning data generator (contains conf snippets for kapacitor)"
 	  [[ ! -d influxdb-sampledata ]] && git clone "https://github.com/phlenoir/influxdb-sampledata.git"
 	  sudo chown -R vagrant:vagrant influxdb-sampledata
@@ -105,7 +102,7 @@ Vagrant.configure("2") do |config|
 	  [[ ! -f grafana-4.3.1-1.x86_64.rpm ]] &&  wget --progress=bar:force https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.3.1-1.x86_64.rpm 
       sudo yum localinstall grafana-4.3.1-1.x86_64.rpm -y
       sudo systemctl start grafana-server
-      echo "You may have to change Grafana http port to match virtualbox forwarded port (e.g. 8080)"
+      echo "You may have to change Grafana http port to match virtualbox forwarded port (e.g. 3000)"
       echo "Do --> sudo vi /etc/grafana/grafana.ini"
       echo "Do --> sudo systemctl restart grafana-server"
 	  
