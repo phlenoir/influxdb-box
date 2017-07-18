@@ -1,5 +1,5 @@
 # influxdb-box
-A Vagrant Centos7 box to play around with InfluxDB time series database.
+A Vagrant Centos7 box to play with InfluxDB time series database.
 The box comes with influxdb, kapacitor and grafana installed plus a couple a utilities, among them a sample data generator (see https://github.com/phlenoir/influxdb-sampledata.git)
 
 ## Installation 
