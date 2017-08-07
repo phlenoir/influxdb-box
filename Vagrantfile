@@ -83,13 +83,17 @@ Vagrant.configure("2") do |config|
 	  echo "Installing pip"
 	  [[ ! -f get-pip.py ]] && sudo wget --progress=bar:force https://bootstrap.pypa.io/get-pip.py
 	  python get-pip.py
+          echo "Installing influxdb python API"
+          pip install influxdb
+          echo "Installing python lib pyymal"
+          pip install pyyaml
 	  echo "Cloning data generator (contains conf snippets for kapacitor)"
 	  [[ ! -d influxdb-sampledata ]] && git clone "https://github.com/phlenoir/influxdb-sampledata.git"
 	  sudo chown -R vagrant:vagrant influxdb-sampledata
 	  
 	  echo "Installing influxdb"
-	  [[ ! -f influxdb-1.2.4.x86_64.rpm ]] && wget --progress=bar:force https://dl.influxdata.com/influxdb/releases/influxdb-1.2.4.x86_64.rpm
-      sudo yum localinstall influxdb-1.2.4.x86_64.rpm -y
+	  [[ ! -f influxdb-1.3.2.x86_64.rpm ]] && wget --progress=bar:force https://dl.influxdata.com/influxdb/releases/influxdb-1.3.2.x86_64.rpm
+      sudo yum localinstall influxdb-1.3.2.x86_64.rpm -y
       sudo systemctl restart influxdb
 	  
 	  echo "Installing kapacitor"
