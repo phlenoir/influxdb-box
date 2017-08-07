@@ -33,6 +33,7 @@ and also
 * InfluxDB 1.2
 * Kapacitor 1.3
 * Grafana 4.3
-* [pip](https://pip.pypa.io/en/stable/)
-* [monotonic python module](https://pypi.python.org/pypi/monotonic)
+* [pip](https://pip.pypa.io/en/stable/) 
+* python dependencies
+* a few helper stop/start scripts for no-standard environment
 
